@@ -1,0 +1,62 @@
+<h2 id="page-heading" data-cy="PaygovHeading" class="ctr">
+  <span><strong>PayGov</strong></span>
+</h2>
+<br />
+<div xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+  <div class="d-flex justify-content-center" *ngIf="loading" id="redirect">
+    <div class="spinner-border" role="status" class="ctr">
+      <span class="sr-only" id="loading"></span>
+    </div>
+  </div>
+  <br />
+
+  <div class="ctr" id="timer">
+    <h6>you are going to be redirected</h6>
+    <h6>to the payment page, only</h6>
+    <h6 id="tLeft">{{ timeLeft }} seconds are left</h6>
+  </div>
+
+  <br /><br />
+
+  <form name="form" role="form" [formGroup]="form">
+    <div id="confirm">
+      <div class="form-group">
+        <strong><span>Cik : </span></strong>
+        <span>{{ data.cik }}</span>
+      </div>
+      <br />
+      <div class="form-group">
+        <strong><span>Ccc : </span></strong>
+        <span>{{ data.ccc }}</span>
+      </div>
+      <br />
+      <div class="form-group">
+        <strong><span>Payment Amount : </span></strong>
+        <span>{{ data.paymentAmount }}</span>
+      </div>
+      <br />
+      <div class="form-group">
+        <strong><span>Name : </span></strong>
+        <span>{{ data.name }}</span>
+      </div>
+      <br />
+      <div class="form-group">
+        <strong><span>Email : </span></strong>
+        <span>{{ data.email }}</span>
+      </div>
+      <br />
+      <div class="form-group">
+        <strong><span>Phone : </span></strong>
+        <span>{{ data.phone }}</span>
+      </div>
+      <br /><br />
+
+      <div class="ctr">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-primary" (click)="previousState()">
+          &nbsp;&nbsp;&nbsp;&nbsp; <fa-icon icon="arrow-left"></fa-icon>&nbsp;&nbsp;
+          <span>Go to back</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button
+        ><br /><br /><br />
+      </div>
+    </div>
+  </form>
+</div>

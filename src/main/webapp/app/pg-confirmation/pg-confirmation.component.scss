@@ -1,0 +1,56 @@
+#loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#confirm {
+  margin-left: 550px;
+}
+
+.border {
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.btn {
+  margin-left: -550px;
+}
+
+#timer {
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+  margin-left: 550px;
+  margin-right: 550px;
+  font-family: serif;
+}
+#tLeft {
+  font-weight: bold;
+}
+
+#field_phone {
+  border: 0px;
+}
+
+.ctr {
+  text-align: center;
+}

@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { ProfileService } from './profile.service';
 
@@ -13,12 +12,8 @@ import { ProfileService } from './profile.service';
   `,
   styleUrls: ['./page-ribbon.component.scss'],
 })
-export class PageRibbonComponent implements OnInit {
+export class PageRibbonComponent {
   ribbonEnv$?: Observable<string | undefined>;
 
   constructor(private profileService: ProfileService) {}
-
-  ngOnInit(): void {
-    this.ribbonEnv$ = this.profileService.getProfileInfo().pipe(map(profileInfo => profileInfo.ribbonEnv));
-  }
 }

@@ -49,7 +49,7 @@ describe('MainComponent', () => {
   });
 
   describe('page title', () => {
-    const defaultPageTitle = 'Paygov A';
+    const defaultPageTitle = 'Pay Gov';
     const parentRoutePageTitle = 'parentTitle';
     const childRoutePageTitle = 'childTitle';
     const navigationEnd = new NavigationEnd(1, '', '');

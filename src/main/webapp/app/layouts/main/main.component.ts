@@ -33,7 +33,7 @@ export class MainComponent implements OnInit {
   private updateTitle(): void {
     let pageTitle = this.getPageTitle(this.router.routerState.snapshot.root);
     if (!pageTitle) {
-      pageTitle = 'Paygov A';
+      pageTitle = 'Pay Gov';
     }
     this.titleService.setTitle(pageTitle);
   }

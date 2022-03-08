@@ -14,6 +14,10 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+logging:
+  file:
+    name: D:/JHproject/ELK/elkLogFile.log
+
 management:
   endpoints:
     web:
@@ -67,6 +71,15 @@ management:
 spring:
   application:
     name: Paygov_A
+    apiKeyId: c8e19539478a1b05
+    secretApiKey: IOqNecY6Wc/1SHa7po3/+AKWn1klsHibb6z7Fwls0FI=
+    cccValidatorAPI: https://mockbin.org/bin/a47733d9-1f31-4f84-97cc-17bf32f00809
+    cikValidatorAPI: https://mockbin.org/bin/2422df5b-c77c-49c4-b1ad-6c479e94ff89
+    paypalUrl: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=
+    returnUrl: http://localhost:9000/payment-save
+    cancelUrl: http://localhost:9000
+    bootstrap-servers: localhost:9092
+    consumer-group: user
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by gradle when building the JAR file

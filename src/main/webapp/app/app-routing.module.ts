@@ -22,10 +22,30 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           canActivate: [UserRouteAccessService],
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
+
         {
           path: 'account',
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
+
+        {
+          path: 'pay-gov',
+          loadChildren: () => import('./pay-gov/pay-gov.module').then(m => m.PayGovModule),
+        },
+        {
+          path: 'pg-confirmation',
+          loadChildren: () => import('./pg-confirmation/pg-confirmation.module').then(m => m.PgConfirmationModule),
+        },
+        {
+          path: 'payment-save',
+          loadChildren: () => import('./payment-save/payment-save.module').then(m => m.PaymentSaveModule),
+        },
+
+        {
+          path: 'kafkadmin',
+          loadChildren: () => import('./kafkadmin/kafkadmin.module').then(m => m.KafkadminModule),
+        },
+
         {
           path: 'login',
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),

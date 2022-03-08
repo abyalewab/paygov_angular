@@ -9,12 +9,15 @@ import com.mycompany.myapp.service.MailService;
 import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.dto.AdminUserDTO;
 import com.mycompany.myapp.service.dto.PasswordChangeDTO;
-import com.mycompany.myapp.web.rest.errors.*;
+import com.mycompany.myapp.web.rest.errors.EmailAlreadyUsedException;
+import com.mycompany.myapp.web.rest.errors.InvalidPasswordException;
+import com.mycompany.myapp.web.rest.errors.LoginAlreadyUsedException;
 import com.mycompany.myapp.web.rest.vm.KeyAndPasswordVM;
 import com.mycompany.myapp.web.rest.vm.ManagedUserVM;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * REST controller for managing the current user's account.
  */
+
 @RestController
 @RequestMapping("/api")
 public class AccountResource {
@@ -67,6 +71,9 @@ public class AccountResource {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
+
+    String noUser = "User could not be found";
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
@@ -111,10 +118,7 @@ public class AccountResource {
      */
     @GetMapping("/account")
     public AdminUserDTO getAccount() {
-        return userService
-            .getUserWithAuthorities()
-            .map(AdminUserDTO::new)
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        return userService.getUserWithAuthorities().map(AdminUserDTO::new).orElseThrow(() -> new AccountResourceException(noUser));
     }
 
     /**
@@ -126,16 +130,14 @@ public class AccountResource {
      */
     @PostMapping("/account")
     public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
-        String userLogin = SecurityUtils
-            .getCurrentUserLogin()
-            .orElseThrow(() -> new AccountResourceException("Current user login not found"));
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException(noUser));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
-            throw new AccountResourceException("User could not be found");
+            throw new AccountResourceException(noUser);
         }
         userService.updateUser(
             userDTO.getFirstName(),

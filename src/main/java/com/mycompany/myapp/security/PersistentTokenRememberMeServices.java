@@ -5,7 +5,8 @@ import com.mycompany.myapp.repository.PersistentTokenRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -14,7 +15,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.rememberme.*;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.CookieTheftException;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
+import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException;
 import org.springframework.stereotype.Service;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.security.PersistentTokenCache;
@@ -98,7 +102,6 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
                 try {
                     persistentTokenRepository.saveAndFlush(token);
                 } catch (DataAccessException e) {
-                    log.error("Failed to update token: ", e);
                     throw new RememberMeAuthenticationException("Autologin failed due to data access problem", e);
                 }
                 addCookie(token, request, response);

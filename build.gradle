@@ -24,6 +24,8 @@ plugins {
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
+apply plugin: "com.gorylenko.gradle-git-properties"
+
 group = "com.mycompany.myapp"
 version = "0.0.1-SNAPSHOT"
 
@@ -104,6 +106,91 @@ modernizer {
     includeTestClasses = true
 }
 
+
+configurations {
+    providedRuntime
+    implementation.exclude module: "spring-boot-starter-tomcat"
+    all {
+        resolutionStrategy {
+            // Inherited version from Spring Boot can't be used because of regressions:
+            // To be removed as soon as spring-boot use the same version
+            force 'org.liquibase:liquibase-core:4.5.0'
+        }
+    }
+    jaxb
+}
+
+
+task genJaxb {
+    //ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+    //ext.classesDir = "${buildDir}/classes/jaxb"
+    ext.sourcesDir = "generated-sources/jaxb"
+    ext.classesDir = "classes/jaxb"
+    ext.schema = "src/main/resources/paypal.wsdl"
+
+    outputs.dir classesDir
+
+    doLast() {
+        project.ant {
+            taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+                classpath: configurations.jaxb.asPath
+            mkdir(dir: sourcesDir)
+            mkdir(dir: classesDir)
+
+            xjc(destdir: sourcesDir, schema: schema,
+                package: "com.mycompany.myapp") {
+                arg(value: "-wsdl")
+                produces(dir: sourcesDir, includes: "**/*.java")
+            }
+
+            javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+                debugLevel: "lines,vars,source",
+                classpath: configurations.jaxb.asPath) {
+                src(path: sourcesDir)
+                include(name: "**/*.java")
+                include(name: "*.java")
+            }
+
+            copy(todir: classesDir) {
+                fileset(dir: sourcesDir, erroronmissingdir: false) {
+                    exclude(name: "**/*.java")
+                }
+            }
+        }
+    }
+}
+compileJava.dependsOn genJaxb
+
+bootJar {
+    baseName = 'gs-consuming-web-service'
+    version =  '0.1.0'
+    from genJaxb.classesDir
+}
+
+task afterEclipseImport {
+    dependsOn genJaxb
+}
+
+
+
+
+
+task stage(type: Copy, dependsOn: [clean, build]) {
+    from jar.archivePath
+    into project.rootDir
+    rename {
+        'app.jar'
+    }
+}
+stage.mustRunAfter(clean)
+
+clean {
+    project.file('app.jar').delete()
+}
+
+
+
+
 task integrationTest(type: Test) {
     useJUnitPlatform()
     description = "Execute integration tests."
@@ -122,6 +209,10 @@ task integrationTest(type: Test) {
     // ignoreFailures true
     reports.html.enabled = false
 }
+
+
+System.setProperty("javax.xml.bind.JAXBContextFactory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
+
 
 check.dependsOn integrationTest
 task testReport(type: TestReport) {
@@ -182,17 +273,11 @@ nohttp {
     source.include "build.gradle", "README.md"
 }
 
-configurations {
-    providedRuntime
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    all {
-        resolutionStrategy {
-            // Inherited version from Spring Boot can't be used because of regressions:
-            // To be removed as soon as spring-boot use the same version
-            force 'org.liquibase:liquibase-core:4.5.0'
-        }
-    }
-}
+
+/*
+dependencies {
+    classpath 'no.nils:wsdl2java:0.10'
+}*/
 
 repositories {
     mavenLocal()
@@ -208,6 +293,42 @@ dependencies {
 
     // Use ", version: jhipsterDependenciesVersion, changing: true" if you want
     // to use a SNAPSHOT release instead of a stable release
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
+    implementation("org.springframework.ws:spring-ws-core")
+    implementation(files(genJaxb.classesDir).builtBy(genJaxb))
+    jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation("wsdl4j:wsdl4j:1.6.3")
+    implementation 'org.json:json:20180130'
+
+    implementation 'org.drools:drools-decisiontables:7.66.0.Final'
+    implementation 'org.drools:drools-core:7.66.0.Final'
+    implementation 'org.drools:drools-compiler:7.66.0.Final'
+
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.apache.kafka:kafka-clients:2.8.0'
+    implementation 'org.apache.kafka:kafka-streams:2.8.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:webjars-locator-core'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:bootstrap:5.1.1'
+    implementation 'org.webjars:jquery:3.6.0'
+
+
+    //implementation 'org.postgresql:postgresql:42.2.2'
+    //implementation 'org.apache.tomcat:tomcat-jdbc'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //implementation 'com.paypal.sdk:paypal-core:1.7.0'
+    implementation "com.paypal.sdk:merchantsdk:2.15.122"
+    //implementation 'com.paypal.sdk:checkout-sdk:1.0.1'
+    implementation "com.ingenico.connect.gateway:connect-sdk-java:6.26.0"
     implementation group: "tech.jhipster", name: "jhipster-framework"
     implementation "javax.annotation:javax.annotation-api"
     implementation "io.dropwizard.metrics:metrics-core"
@@ -225,6 +346,7 @@ dependencies {
     implementation "org.hibernate:hibernate-entitymanager"
     implementation "org.hibernate.validator:hibernate-validator"
     implementation "org.liquibase:liquibase-core"
+    implementation 'tech.simter:simter-rest-jaxrs-jersey:1.1.0'
     liquibaseRuntime "org.liquibase:liquibase-core"
     liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibaseHibernate5Version}"
     liquibaseRuntime sourceSets.main.compileClasspath
@@ -235,9 +357,13 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     testImplementation "org.testcontainers:postgresql"
     implementation "org.springframework.boot:spring-boot-starter-security"
+
+    /*
     implementation ("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
+    */
+
     implementation "org.springframework.boot:spring-boot-starter-undertow"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
     implementation "org.zalando:problem-spring-web"

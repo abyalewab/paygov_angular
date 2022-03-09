@@ -16,7 +16,7 @@
     "otherModules": [],
     "pages": [],
     "creationTimestamp": 1646665209121,
-    "serviceDiscoveryType": "no",
+    "serviceDiscoveryType": false,
     "reactive": false,
     "authenticationType": "session",
     "packageName": "com.mycompany.myapp",
@@ -42,6 +42,12 @@
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
     "enableGradleEnterprise": false,
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "appsFolders": ["Paygov_A"],
+    "directoryPath": "../",
+    "gatewayType": "SpringCloudGateway",
+    "clusteredDbApps": {},
+    "monitoring": "prometheus",
+    "jwtSecretKey": "Nzk3OTNhZDZjNWVhMjEwZGNhM2YxZDI2YTY4MTAyNmZkYjMxYTc2OWZhOGRkNTYzYzRiYTM0OGRhZmI0YjI3ZjQyZjYyOTg5MjU5NTMyNGM1NWY1MDhjNDNkZWIzMGMyNTNhNw=="
   }
 }

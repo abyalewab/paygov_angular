@@ -19,8 +19,8 @@ services:
     # volumes:
     #   - ~/volumes/jhipster/Paygov_A/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=Paygov_A
-      - POSTGRES_PASSWORD=
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=AByalewAB
       - POSTGRES_HOST_AUTH_METHOD=trust
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix

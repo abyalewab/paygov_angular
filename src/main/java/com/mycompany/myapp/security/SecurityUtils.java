@@ -1,10 +1,11 @@
 package com.mycompany.myapp.security;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  * Utility class for Spring Security.
  */
 public final class SecurityUtils {
+
+    public static final String CLAIMS_NAMESPACE = "https://www.jhipster.tech/";
 
     private SecurityUtils() {}
 
@@ -83,5 +86,20 @@ public final class SecurityUtils {
 
     private static Stream<String> getAuthorities(Authentication authentication) {
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
+    }
+
+    public static List<GrantedAuthority> extractAuthorityFromClaims(Map<String, Object> claims) {
+        return mapRolesToGrantedAuthorities(getRolesFromClaims(claims));
+    }
+
+    private static Collection<String> getRolesFromClaims(Map<String, Object> claims) {
+        return (Collection<String>) claims.getOrDefault(
+            "groups",
+            claims.getOrDefault("roles", claims.getOrDefault(CLAIMS_NAMESPACE + "roles", new ArrayList<>()))
+        );
+    }
+
+    private static List<GrantedAuthority> mapRolesToGrantedAuthorities(Collection<String> roles) {
+        return roles.stream().filter(role -> role.startsWith("ROLE_")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }

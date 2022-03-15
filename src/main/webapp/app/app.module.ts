@@ -24,8 +24,8 @@ import { ErrorComponent } from './layouts/error/error.component';
 import { PayGovModule } from './pay-gov/pay-gov.module';
 import { PgConfirmationModule } from './pg-confirmation/pg-confirmation.module';
 import { PaymentSaveModule } from './payment-save/payment-save.module';
-import { HttpClientModule } from '@angular/common/http';
 import { KafkadminModule } from './kafkadmin/kafkadmin.module';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   imports: [
     BrowserModule,

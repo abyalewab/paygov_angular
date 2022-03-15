@@ -327,9 +327,9 @@ dependencies {
     //implementation 'org.apache.tomcat:tomcat-jdbc'
     //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    implementation 'com.paypal.sdk:paypal-core:1.7.0'
+    //implementation 'com.paypal.sdk:paypal-core:1.7.0'
     implementation "com.paypal.sdk:merchantsdk:2.15.122"
-    implementation 'com.paypal.sdk:checkout-sdk:1.0.1'
+    //implementation 'com.paypal.sdk:checkout-sdk:1.0.1'
     implementation "com.ingenico.connect.gateway:connect-sdk-java:6.26.0"
     implementation group: "tech.jhipster", name: "jhipster-framework"
     implementation "javax.annotation:javax.annotation-api"
